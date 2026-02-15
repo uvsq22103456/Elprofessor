@@ -4,333 +4,354 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Mes Cours</title>
+    <meta name="theme-color" content="#4f46e5">
+    <title>Mon Planning</title>
     <style>
         :root {
             --primary: #4f46e5;
             --success: #10b981;
-            --bg: #f3f4f6;
+            --bg: #f1f5f9;
             --card: #ffffff;
-            --text: #1f2937;
-            --gray: #9ca3af;
+            --text: #0f172a;
+            --gray: #64748b;
+            --border: #e2e8f0;
         }
 
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        
-        body { margin: 0; padding: 0; background: var(--bg); color: var(--text); padding-bottom: 80px; }
+        body { 
+            margin: 0; padding: 0; 
+            background: var(--bg); color: var(--text); 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding-bottom: 90px; 
+        }
 
-        /* Header */
+        /* --- HEADER FIXE --- */
         header {
             background: var(--card);
-            padding: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky; top: 0; z-index: 50;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            padding-bottom: 5px;
         }
 
-        h1 { margin: 0; font-size: 1.2rem; text-align: center; color: var(--text); }
-        .date-display { text-align: center; font-size: 0.9rem; color: var(--gray); margin-top: 5px; }
-
-        /* Stats Cards */
-        .stats-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            padding: 20px;
+        /* Stats du mois */
+        .stats-row {
+            display: grid; grid-template-columns: 1fr 1fr;
+            text-align: center; border-bottom: 1px solid var(--border);
         }
-
-        .stat-card {
-            background: var(--card);
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        }
-
-        .stat-label { font-size: 0.8rem; color: var(--gray); display: block; margin-bottom: 5px; }
-        .stat-value { font-size: 1.4rem; font-weight: bold; }
-        .potential { color: var(--primary); }
+        .stat-box { padding: 15px 5px; }
+        .stat-label { font-size: 0.7rem; color: var(--gray); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        .stat-val { font-size: 1.3rem; font-weight: 800; display: block; margin-top: 4px; }
+        .pot { color: var(--primary); }
         .real { color: var(--success); }
 
-        /* List */
-        .list-container { padding: 0 20px; }
-        .section-title { font-size: 1rem; margin-bottom: 10px; color: var(--gray); font-weight: 600; }
-
-        .course-card {
-            background: var(--card);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.2s;
-            border-left: 5px solid var(--primary);
+        /* Navigation Semaine */
+        .week-nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 15px; background: var(--card);
         }
-
-        .course-card.paid {
-            border-left: 5px solid var(--success);
-            opacity: 0.8;
-            background: #ecfdf5;
+        .nav-btn {
+            background: var(--bg); border: none; width: 40px; height: 40px;
+            border-radius: 8px; font-size: 1.2rem; color: var(--primary);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
+        .week-title { font-weight: 700; font-size: 0.95rem; text-transform: capitalize; }
+        .reset-today { font-size: 0.7rem; color: var(--primary); text-decoration: underline; background: none; border: none; margin-top: 2px;}
 
-        .course-info h3 { margin: 0 0 5px 0; font-size: 1rem; }
-        .course-info p { margin: 0; font-size: 0.85rem; color: var(--gray); }
+        /* --- CALENDRIER --- */
+        .calendar-list { padding: 15px; }
         
-        .course-action { text-align: right; }
-        .price { font-weight: bold; font-size: 1.1rem; display: block; margin-bottom: 5px; }
+        .day-block { margin-bottom: 20px; }
+        
+        .day-header {
+            font-size: 0.9rem; color: var(--gray);
+            margin-bottom: 8px; padding-left: 5px;
+            font-weight: 700; text-transform: capitalize;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .day-header.today { color: var(--primary); }
+        .today-badge { background: var(--primary); color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
 
-        /* Checkbox custom */
+        .empty-slot {
+            padding: 15px; text-align: center; color: #cbd5e1;
+            font-size: 0.8rem; border: 2px dashed #e2e8f0; border-radius: 12px;
+        }
+
+        /* Carte Cours */
+        .course-card {
+            background: var(--card); border-radius: 12px;
+            padding: 15px; margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex; justify-content: space-between; align-items: center;
+            border-left: 5px solid var(--primary);
+            transition: all 0.2s;
+        }
+        .course-card.paid {
+            background: #ecfdf5; border-left-color: var(--success); opacity: 0.8;
+        }
+
+        .info h3 { margin: 0; font-size: 1rem; font-weight: 600; }
+        .info p { margin: 4px 0 0; font-size: 0.85rem; color: var(--gray); }
+        
+        .actions { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .price { font-weight: 800; font-size: 1.1rem; }
+        
         .check-btn {
-            background: none;
-            border: 2px solid var(--gray);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: transparent;
+            width: 32px; height: 32px; border-radius: 50%;
+            border: 2px solid #cbd5e1; background: transparent;
+            color: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
         }
-        .paid .check-btn {
-            background: var(--success);
-            border-color: var(--success);
-            color: white;
-        }
+        .paid .check-btn { background: var(--success); border-color: var(--success); color: white; }
+        .del-btn { color: #ef4444; font-size: 0.75rem; text-decoration: underline; background: none; border: none; padding: 0; }
 
-        /* FAB (Add Button) */
+        /* --- BOUTON + --- */
         .fab {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background: var(--primary);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
-            cursor: pointer;
-            border: none;
-            z-index: 100;
+            position: fixed; bottom: 25px; right: 25px;
+            background: var(--primary); color: white;
+            width: 60px; height: 60px; border-radius: 50%;
+            border: none; font-size: 32px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+            cursor: pointer; z-index: 100; display: flex; align-items: center; justify-content: center;
         }
 
-        /* Modal */
+        /* --- MODAL --- */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
+            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.5); z-index: 200; align-items: flex-end;
         }
         .modal.active { display: flex; }
-        
         .modal-content {
-            background: white;
-            padding: 25px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 400px;
+            background: white; width: 100%; border-radius: 20px 20px 0 0;
+            padding: 25px; animation: slideUp 0.3s;
         }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.9rem; }
-        input { width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 1rem; }
-        
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-        .btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .btn-cancel { background: #f3f4f6; color: var(--text); }
-        .btn-save { background: var(--primary); color: white; }
-        .delete-btn { color: #ef4444; background: none; border: none; font-size: 0.8rem; margin-top: 5px; text-decoration: underline; }
+        input, select { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; background: var(--bg); }
+        .btn-save { width: 100%; padding: 15px; border: none; border-radius: 10px; background: var(--primary); color: white; font-weight: bold; font-size: 1rem; }
+        .close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 2rem; color: var(--gray); line-height: 1; }
 
     </style>
 </head>
 <body>
 
 <header>
-    <h1 id="monthDisplay">Chargement...</h1>
-    <div class="date-display" id="todayDate"></div>
+    <div class="stats-row">
+        <div class="stat-box">
+            <span class="stat-label" id="labelPotentiel">Potentiel</span>
+            <span class="stat-val pot" id="totalPotentiel">0€</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-label" id="labelReel">Encaissé</span>
+            <span class="stat-val real" id="totalReel">0€</span>
+        </div>
+    </div>
+    
+    <div class="week-nav">
+        <button class="nav-btn" onclick="changeWeek(-1)">‹</button>
+        <div style="text-align:center">
+            <div class="week-title" id="monthTitle">...</div>
+            <button class="reset-today" onclick="resetToToday()">Revenir à aujourd'hui</button>
+        </div>
+        <button class="nav-btn" onclick="changeWeek(1)">›</button>
+    </div>
 </header>
 
-<div class="stats-container">
-    <div class="stat-card">
-        <span class="stat-label">Gain Potentiel</span>
-        <div class="stat-value potential" id="totalPotential">0€</div>
+<div id="calendarList" class="calendar-list">
     </div>
-    <div class="stat-card">
-        <span class="stat-label">Gain Réel (En poche)</span>
-        <div class="stat-value real" id="totalReal">0€</div>
-    </div>
-</div>
-
-<div class="list-container">
-    <div class="section-title">À venir & Récents</div>
-    <div id="courseList">
-        </div>
-</div>
 
 <button class="fab" onclick="openModal()">+</button>
 
 <div class="modal" id="addModal">
     <div class="modal-content">
-        <h2 style="margin-top:0">Nouveau cours</h2>
-        <div class="form-group">
-            <label>Élève</label>
-            <input type="text" id="studentName" placeholder="Ex: Thomas Maths">
+        <button class="close-modal" onclick="closeModal()">×</button>
+        <h2 style="margin: 0 0 20px 0;">Nouveau cours</h2>
+        
+        <input type="text" id="inpName" placeholder="Nom de l'élève (ex: Mathéo)">
+        <input type="date" id="inpDate">
+        <div style="display:flex; gap:10px;">
+            <input type="time" id="inpTime" style="flex:1">
+            <input type="number" id="inpPrice" placeholder="Prix (€)" style="flex:1" inputmode="numeric">
         </div>
-        <div class="form-group">
-            <label>Date & Heure</label>
-            <input type="datetime-local" id="courseDate">
-        </div>
-        <div class="form-group">
-            <label>Prix (€)</label>
-            <input type="number" id="coursePrice" inputmode="numeric" placeholder="Ex: 30">
-        </div>
-        <div class="btn-group">
-            <button class="btn btn-cancel" onclick="closeModal()">Annuler</button>
-            <button class="btn btn-save" onclick="saveCourse()">Enregistrer</button>
-        </div>
+
+        <button class="btn-save" onclick="addCourse()">Valider</button>
     </div>
 </div>
 
 <script>
-    // --- Logique de l'application ---
+    // --- GESTION DES DATES ---
+    
+    // Fonction qui trouve le VRAI Lundi de la semaine d'une date donnée
+    // Gère le cas du Dimanche (qui vaut 0 en JS mais est le dernier jour en France)
+    function getMonday(d) {
+        d = new Date(d);
+        var day = d.getDay(); 
+        var diff = d.getDate() - day + (day == 0 ? -6 : 1); // Si dimanche (0), on recule de 6, sinon on recule de (jour - 1)
+        return new Date(d.setDate(diff));
+    }
 
-    let courses = JSON.parse(localStorage.getItem('myCourses')) || [];
+    let currentWeekStart = getMonday(new Date());
+    let courses = JSON.parse(localStorage.getItem('coursApp_v3')) || [];
 
     function init() {
-        updateDateHeader();
-        renderCourses();
+        renderWeek();
     }
 
-    function updateDateHeader() {
-        const now = new Date();
-        const options = { month: 'long', year: 'numeric' };
-        document.getElementById('monthDisplay').textContent = now.toLocaleDateString('fr-FR', options).toUpperCase();
-        document.getElementById('todayDate').textContent = "Aujourd'hui : " + now.toLocaleDateString('fr-FR');
+    function changeWeek(direction) {
+        // Ajoute ou retire 7 jours
+        currentWeekStart.setDate(currentWeekStart.getDate() + (direction * 7));
+        renderWeek();
     }
 
-    function saveCourse() {
-        const name = document.getElementById('studentName').value;
-        const date = document.getElementById('courseDate').value;
-        const price = parseFloat(document.getElementById('coursePrice').value);
+    function resetToToday() {
+        currentWeekStart = getMonday(new Date());
+        renderWeek();
+    }
 
-        if (!name || !date || !price) {
-            alert("Merci de tout remplir !");
-            return;
-        }
-
-        const newCourse = {
-            id: Date.now(),
-            name: name,
-            date: date,
-            price: price,
-            paid: false
-        };
-
-        courses.push(newCourse);
-        saveToStorage();
-        closeModal();
-        renderCourses();
+    function renderWeek() {
+        const container = document.getElementById('calendarList');
+        container.innerHTML = '';
         
-        // Reset form
-        document.getElementById('studentName').value = '';
-        document.getElementById('coursePrice').value = '';
+        let statsMonthName = "";
+        let pot = 0;
+        let real = 0;
+
+        // Date de référence pour la boucle (Lundi)
+        let loopDay = new Date(currentWeekStart);
+        
+        // Titre du mois (basé sur le Jeudi de la semaine pour être sûr d'avoir le bon mois majoritaire)
+        let middleOfWeek = new Date(currentWeekStart);
+        middleOfWeek.setDate(currentWeekStart.getDate() + 3);
+        statsMonthName = middleOfWeek.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+        document.getElementById('monthTitle').textContent = statsMonthName;
+        
+        // Calcul des stats pour ce MOIS spécifique
+        const targetMonth = middleOfWeek.getMonth();
+        const targetYear = middleOfWeek.getFullYear();
+
+        // On calcule les sous
+        courses.forEach(c => {
+            const cDate = new Date(c.date);
+            if(cDate.getMonth() === targetMonth && cDate.getFullYear() === targetYear) {
+                pot += parseFloat(c.price);
+                if(c.paid) real += parseFloat(c.price);
+            }
+        });
+
+        document.getElementById('labelPotentiel').textContent = `POTENTIEL (${middleOfWeek.toLocaleDateString('fr-FR', { month: 'short' }).toUpperCase()})`;
+        document.getElementById('totalPotentiel').textContent = pot + '€';
+        document.getElementById('totalReel').textContent = real + '€';
+
+        // Génération des 7 jours
+        const todayStr = new Date().toISOString().split('T')[0];
+
+        for (let i = 0; i < 7; i++) {
+            const dateKey = loopDay.toISOString().split('T')[0];
+            
+            // Format d'affichage : "Lundi 12 Février"
+            const dayName = loopDay.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+            
+            // Vérifier si c'est aujourd'hui
+            const isToday = (dateKey === todayStr);
+
+            const div = document.createElement('div');
+            div.className = 'day-block';
+            
+            let html = `
+                <div class="day-header ${isToday ? 'today' : ''}">
+                    <span>${dayName}</span>
+                    ${isToday ? '<span class="today-badge">AUJOURD\'HUI</span>' : ''}
+                </div>
+            `;
+
+            // Trouver les cours du jour
+            const daysCourses = courses.filter(c => c.date === dateKey).sort((a,b) => a.time.localeCompare(b.time));
+
+            if (daysCourses.length === 0) {
+                html += `<div class="empty-slot">Rien de prévu</div>`;
+            } else {
+                daysCourses.forEach(c => {
+                    html += `
+                        <div class="course-card ${c.paid ? 'paid' : ''}">
+                            <div class="info">
+                                <h3>${c.name}</h3>
+                                <p>${c.time}h</p>
+                            </div>
+                            <div class="actions">
+                                <span class="price">${c.price}€</span>
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <button class="del-btn" onclick="deleteCourse(${c.id})">Suppr.</button>
+                                    <button class="check-btn" onclick="togglePaid(${c.id})">✓</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            div.innerHTML = html;
+            container.appendChild(div);
+
+            // Jour suivant
+            loopDay.setDate(loopDay.getDate() + 1);
+        }
+    }
+
+    // --- LOGIQUE CRUD ---
+
+    function addCourse() {
+        const name = document.getElementById('inpName').value;
+        const date = document.getElementById('inpDate').value;
+        const time = document.getElementById('inpTime').value;
+        const price = document.getElementById('inpPrice').value;
+
+        if(!name || !date || !price) { alert("Il manque des infos !"); return; }
+
+        courses.push({
+            id: Date.now(),
+            name, date, time: time || '00:00', price, paid: false
+        });
+
+        save();
+        closeModal();
+        
+        // On ne change pas de semaine, on recharge juste la vue actuelle
+        // Si tu ajoutes un cours pour dans 3 semaines, tu devras naviguer pour le voir
+        renderWeek();
+        
+        // Reset inputs
+        document.getElementById('inpName').value = '';
+        document.getElementById('inpPrice').value = '';
     }
 
     function togglePaid(id) {
-        const index = courses.findIndex(c => c.id === id);
-        if (index !== -1) {
-            courses[index].paid = !courses[index].paid;
-            saveToStorage();
-            renderCourses();
+        const c = courses.find(x => x.id === id);
+        if(c) {
+            c.paid = !c.paid;
+            save();
+            renderWeek();
         }
     }
 
     function deleteCourse(id) {
-        if(confirm('Supprimer ce cours ?')) {
-            courses = courses.filter(c => c.id !== id);
-            saveToStorage();
-            renderCourses();
+        if(confirm("Supprimer ce cours ?")) {
+            courses = courses.filter(x => x.id !== id);
+            save();
+            renderWeek();
         }
     }
 
-    function renderCourses() {
-        const list = document.getElementById('courseList');
-        list.innerHTML = '';
-        
-        let potentialTotal = 0;
-        let realTotal = 0;
-        
-        // Trier par date (du plus récent au plus ancien pour voir la suite)
-        // Ou du plus ancien au plus récent ? Ici : Chronologique
-        const sortedCourses = courses.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        // Filtrer pour le mois en cours (pour les stats)
-        const currentMonth = new Date().getMonth();
-        
-        sortedCourses.forEach(course => {
-            const courseDate = new Date(course.date);
-            const isThisMonth = courseDate.getMonth() === currentMonth;
-
-            // Calculs
-            if (isThisMonth) {
-                potentialTotal += course.price;
-                if (course.paid) {
-                    realTotal += course.price;
-                }
-            }
-
-            // Création HTML
-            const div = document.createElement('div');
-            div.className = `course-card ${course.paid ? 'paid' : ''}`;
-            
-            const dateStr = courseDate.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute:'2-digit' });
-
-            div.innerHTML = `
-                <div class="course-info">
-                    <h3>${course.name}</h3>
-                    <p>${dateStr}</p>
-                    <button class="delete-btn" onclick="deleteCourse(${course.id})">Supprimer</button>
-                </div>
-                <div class="course-action">
-                    <span class="price">${course.price}€</span>
-                    <button class="check-btn" onclick="togglePaid(${course.id})">✓</button>
-                </div>
-            `;
-            list.appendChild(div);
-        });
-
-        // Mise à jour des stats
-        document.getElementById('totalPotential').textContent = potentialTotal + '€';
-        document.getElementById('totalReal').textContent = realTotal + '€';
+    function save() {
+        localStorage.setItem('coursApp_v3', JSON.stringify(courses));
     }
 
-    function saveToStorage() {
-        localStorage.setItem('myCourses', JSON.stringify(courses));
-    }
-
-    // Modal UI
+    // --- MODAL ---
     function openModal() {
-        // Pré-remplir avec la date/heure actuelle
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        document.getElementById('courseDate').value = now.toISOString().slice(0,16);
+        // Par défaut, met la date d'aujourd'hui dans le formulaire
+        document.getElementById('inpDate').value = new Date().toISOString().split('T')[0];
         document.getElementById('addModal').classList.add('active');
     }
     function closeModal() {
         document.getElementById('addModal').classList.remove('active');
     }
 
-    // Lancer l'app
     init();
 
 </script>
