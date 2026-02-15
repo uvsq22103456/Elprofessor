@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <link rel="apple-touch-icon" href="https://placehold.co/180x180/4f46e5/ffffff.png?text=%F0%9F%93%85&font=roboto">
-    <link rel="icon" type="image/png" href="https://placehold.co/180x180/4f46e5/ffffff.png?text=%F0%9F%93%85&font=roboto">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/480/calendar.png">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/480/calendar.png">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#4f46e5">
     
-    <title>Mon Planning</title>
+    <title>El Professor</title>
     
     <style>
+        /* --- LE CSS RESTE LE MÊME (NE TOUCHE PAS AU RESTE) --- */
         :root {
             --primary: #4f46e5;
             --success: #10b981;
@@ -31,7 +32,6 @@
             padding-bottom: 100px; 
         }
 
-        /* HEADER */
         header {
             background: var(--card);
             position: sticky; top: 0; z-index: 50;
@@ -61,7 +61,6 @@
         .week-title { font-weight: 700; font-size: 1rem; text-transform: capitalize; }
         .reset-today { font-size: 0.7rem; color: var(--primary); text-decoration: underline; background: none; border: none; margin-top: 2px; }
 
-        /* LISTE */
         .calendar-list { padding: 15px; }
         .day-block { margin-bottom: 25px; }
         
@@ -79,7 +78,6 @@
             font-size: 0.85rem; border: 2px dashed #e2e8f0; border-radius: 12px;
         }
 
-        /* CARD COURS */
         .course-card {
             background: var(--card); border-radius: 16px;
             padding: 16px; margin-bottom: 12px;
@@ -112,7 +110,6 @@
         .paid .check-btn { background: var(--success); border-color: var(--success); color: white; }
         .del-btn { color: #ef4444; font-size: 0.75rem; text-decoration: underline; background: none; border: none; padding: 0; margin-right: 5px;}
 
-        /* FAB */
         .fab {
             position: fixed; bottom: 30px; right: 30px;
             background: var(--primary); color: white;
@@ -121,7 +118,6 @@
             cursor: pointer; z-index: 100; display: flex; align-items: center; justify-content: center;
         }
 
-        /* MODAL */
         .modal {
             display: none; position: fixed; top:0; left:0; width:100%; height:100%;
             background: rgba(0,0,0,0.6); z-index: 200; align-items: flex-end;
@@ -146,9 +142,9 @@
         .btn-group { display: flex; gap: 12px; margin-top: 25px; }
         .btn-save { flex: 2; padding: 16px; border: none; border-radius: 12px; background: var(--primary); color: white; font-weight: bold; font-size: 1.1rem; }
         .btn-cancel { flex: 1; padding: 16px; border: none; border-radius: 12px; background: #e2e8f0; color: var(--text); font-weight: bold; font-size: 1rem; }
-
     </style>
 </head>
+
 <body>
 
 <header>
